@@ -51,13 +51,12 @@
     .section-title{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:400;color:var(--ink);letter-spacing:1px;}
 
     /* PROJECTS */
-    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);}
-    .project-card{background:var(--white);padding:52px 48px;position:relative;overflow:hidden;transition:background 0.3s;}
-    .project-card:hover{background:var(--off-white);}
+    .projects-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);}
+    .project-card{background:var(--white);padding:52px 48px;position:relative;overflow:visible;transition:background 0.3s;}
+    .project-card:hover{background:var(--white);}
     .project-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--streak,var(--rule));transition:width 0.4s;}
     .project-card:hover::before{width:7px;}
     .project-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--streak,var(--rule));}
-    .project-card.featured{grid-column:span 2;}
     .project-card.upcoming{background:var(--off-white);}
     .project-status{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--streak-text,var(--muted));margin-bottom:28px;display:flex;align-items:center;gap:8px;}
     .status-dot{width:6px;height:6px;border-radius:50%;background:var(--streak,var(--muted));flex-shrink:0;}
@@ -72,7 +71,6 @@
 
     /* PROJECT IMAGE */
     .project-image-wrap{width:100%;height:200px;background:var(--paper);border:1px solid var(--rule);margin-bottom:28px;position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .project-card.featured .project-image-wrap{height:260px;}
     .img-placeholder-text{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;pointer-events:none;}
     .img-placeholder-text svg{width:32px;height:32px;stroke:var(--rule);}
     .project-image-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -82,9 +80,12 @@
     .project-image-wrap.has-img .img-placeholder-text{display:none;}
 
     /* EXPAND */
-    .project-expand-btn{display:inline-flex;align-items:center;gap:8px;margin-top:28px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--brown-mid);border-bottom:1px solid var(--brown-light);padding-bottom:4px;transition:color 0.2s;user-select:none;}
+    .project-expand-btn{display:inline-flex;align-items:center;gap:8px;margin-top:28px;cursor:pointer;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--brown-mid);border-bottom:1px solid var(--brown-light);padding-bottom:4px;transition:color 0.2s;user-select:none;position:relative;z-index:10;}
     .project-expand-btn:hover{color:var(--brown-dark);}
-    .project-detail{margin-top:32px;border-top:1px solid var(--rule);padding-top:32px;animation:fadeUp 0.4s ease;}
+    .project-detail{margin-top:32px;padding-top:32px;}
+    .project-detail-panel{background:var(--off-white);border:1px solid var(--rule);border-top:3px solid var(--brown-mid);padding:52px 56px;animation:fadeUp 0.35s ease;}
+    .project-detail-panel .detail-section{margin-bottom:36px;}
+    .project-detail-panel .detail-section:last-child{margin-bottom:0;}
     .detail-section{margin-bottom:36px;}
     .detail-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
     .detail-text{font-size:0.9rem;color:var(--muted);line-height:1.8;}
@@ -102,12 +103,12 @@
     .img-caption{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px;margin-top:8px;line-height:1.5;}
 
     /* ARCH FLOW */
-    .arch-flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:24px;background:var(--off-white);border:1px solid var(--rule);}
+    .arch-flow{display:flex;align-items:center;flex-wrap:nowrap;gap:8px;padding:24px;background:var(--off-white);border:1px solid var(--rule);overflow-x:auto;}
     .arch-step{text-align:center;min-width:80px;}
     .arch-icon{font-size:1.4rem;margin-bottom:6px;}
     .arch-step-label{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:500;letter-spacing:1px;color:var(--ink);text-transform:uppercase;}
     .arch-step-sub{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);margin-top:2px;}
-    .arch-arrow{font-size:1.1rem;color:var(--brown-mid);margin:0 4px;margin-bottom:16px;}
+    .arch-arrow{font-size:1.1rem;color:var(--brown-mid);margin:0 4px;}
 
     /* CODE BLOCKS */
     .code-block{background:#f7f5f2;border:1px solid var(--rule);border-left:3px solid var(--brown-mid);padding:20px 24px;font-family:'DM Mono',monospace;font-size:0.72rem;line-height:1.7;color:var(--ink-light);overflow-x:auto;white-space:pre;margin:0;}
@@ -119,8 +120,13 @@
     .hw-val{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);text-align:right;}
 
     /* VIDEO */
-    .video-embed-wrap{position:relative;width:100%;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid var(--rule);}
-    .video-embed-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+    .video-link-wrap{display:block;position:relative;width:100%;background:var(--ink);border:1px solid var(--rule);text-decoration:none;overflow:hidden;}
+    .video-link-wrap img{width:100%;display:block;opacity:0.75;transition:opacity 0.3s;}
+    .video-link-wrap:hover img{opacity:0.5;}
+    .video-play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:rgba(255,255,255,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform 0.2s;}
+    .video-link-wrap:hover .video-play-btn{transform:translate(-50%,-50%) scale(1.1);}
+    .video-play-btn svg{width:24px;height:24px;margin-left:5px;}
+    .video-label{position:absolute;bottom:0;left:0;right:0;padding:12px 16px;background:linear-gradient(transparent,rgba(26,23,20,0.8));font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:rgba(250,249,247,0.8);text-transform:uppercase;}
 
     /* SKILLS */
     #skills{background:var(--off-white);}
@@ -206,8 +212,7 @@
       nav{padding:16px 24px;}.nav-links{display:none;}
       .hero{padding:0 24px 60px;}section{padding:64px 24px;}
       .projects-grid,.skills-grid,.contact-layout{grid-template-columns:1fr;}
-      .project-card.featured{grid-column:span 1;}
-      .about-layout{grid-template-columns:1fr;gap:40px;}
+
       .stats-bar{flex-wrap:wrap;}.stat{min-width:50%;}
       footer{flex-direction:column;gap:10px;}
       #edit-toolbar{bottom:16px;right:16px;}
@@ -234,7 +239,6 @@
   <ul class="nav-links">
     <li><a href="#projects" style="">Projects</a></li>
     <li><a href="#skills" style="color: var(--ink);">Skills</a></li>
-    <li><a href="#about" style="">About</a></li>
     <li><a href="#contact" style="">Contact</a></li>
   </ul>
 </nav>
@@ -246,20 +250,15 @@
   <p class="hero-eyebrow" data-editable="" contenteditable="false">Electrical Engineering · Portfolio</p>
   <h1 class="hero-name">Daniel<br><em data-editable="" contenteditable="false">Mejenny</em></h1>
   <div class="hero-divider"></div>
-  <p class="hero-sub" data-editable="" contenteditable="false">Engineering systems at the intersection of hardware and intelligence — from AI-powered embedded devices to quantum algorithm research.</p>
+  <p class="hero-sub" data-editable="" contenteditable="false">I build things that sit at the edge of hardware and software — smart locks, robot arms, quantum simulations. This is a collection of what I've been working on.</p>
   <div class="hero-cta">
     <a href="#projects" class="btn-primary">View Projects</a>
-    <a href="#contact" class="btn-secondary">Get In Touch</a>
+    <a href="#contact" class="btn-secondary">Contact</a>
   </div>
 </section>
 
 <!-- STATS -->
-<div class="stats-bar">
-  <div class="stat reveal visible"><div class="stat-num" data-editable="" contenteditable="false">4</div><div class="stat-label" data-editable="" contenteditable="false">Engineering Projects</div></div>
-  <div class="stat reveal visible"><div class="stat-num" data-editable="" contenteditable="false">3</div><div class="stat-label" data-editable="" contenteditable="false">Disciplines Spanned</div></div>
-  <div class="stat reveal visible"><div class="stat-num" data-editable="" contenteditable="false">1</div><div class="stat-label" data-editable="" contenteditable="false">Active Build</div></div>
-  <div class="stat reveal visible"><div class="stat-num" data-editable="" contenteditable="false">∞</div><div class="stat-label" data-editable="" contenteditable="false">Problems Left to Solve</div></div>
-</div>
+
 
 <!-- PROJECTS -->
 <section id="projects">
@@ -269,9 +268,36 @@
   </div>
   <div class="projects-grid">
 
-    <!-- PROJECT 01: DOOR HANDLE -->
-    <div class="project-card featured reveal visible" style="--streak:#1a1714;--streak-text:#1a1714;">
+    <!-- PROJECT 01: AR4 -->
+    <div class="project-card reveal visible" style="--streak:#a0522d;--streak-text:#a0522d;">
       <div class="project-index">01</div>
+      <div class="project-status">
+        <div class="status-dot pulse"></div>
+        <span class="status-text" data-editable="" contenteditable="false">In Progress</span>
+        <select class="status-select" onchange="updateStatus(this)"><option>Complete</option><option selected="">In Progress</option><option>Coming Soon</option></select>
+      </div>
+      <div class="project-image-wrap" id="img-wrap-3" onclick="triggerUpload('img-3','img-wrap-3')">
+        <div class="img-placeholder-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Click to add project photo</div>
+        <img id="img-3" src="" alt="" style="display:none;">
+        <div class="img-upload-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path></svg><span>Upload Image</span></div>
+      </div>
+      <input type="file" id="file-img-3" accept="image/*" style="display:none" onchange="loadImage(event,'img-3','img-wrap-3')">
+      <h3 class="project-title" data-editable="" contenteditable="false">AR4 Robotic Arm Movement &amp; Control</h3>
+      <p class="project-desc" data-editable="" contenteditable="false">Currently working on programming the AR4 robotic arm. Mostly focused on getting the movement sequences right and tuning the stepper motors — there's a lot of back and forth between the low-level motor control and the higher-level path logic.</p>
+      <div class="project-tags">
+        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Robotics</span>
+        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Motor Control</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Arduino</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">C++</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Stepper Drivers</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Kinematics</span>
+        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      </div>
+    </div>
+
+    <!-- PROJECT 02: DOOR HANDLE -->
+    <div class="project-card featured reveal visible" style="--streak:#1a1714;--streak-text:#1a1714;">
+      <div class="project-index">02</div>
       <div class="project-status">
         <div class="status-dot"></div>
         <span class="status-text" data-editable="" contenteditable="false">Complete</span>
@@ -290,38 +316,46 @@
       </div>
       <input type="file" id="file-img-1" accept="image/*" style="display:none" onchange="loadImage(event,'img-1','img-wrap-1')">
       <h3 class="project-title" data-editable="" contenteditable="false">AI-Powered Facial Recognition Door Handle</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">A Raspberry Pi-based smart lock that uses real-time facial recognition to authenticate users and actuate a servo motor to unlock a door handle. Built with Python, OpenCV, and a custom-trained face encoding pipeline, with a 2-second confirmation timer to prevent false triggers.</p>
-      <div class="project-expand-btn" onclick="toggleExpand(this)"><span class="expand-label">View Code &amp; Technical Details ↓</span></div>
-      <div class="project-detail" style="display:none;">
-        <div class="detail-section">
+      <p class="project-desc" data-editable="" contenteditable="false">A smart lock I built using a Raspberry Pi that recognizes faces in real time and uses a servo motor to unlock a door handle. I trained it on my own face encodings, and added a 2-second confirmation window so it doesn't trigger on a quick glance or a photo.</p>
+      <div class="project-expand-btn" onclick="toggleExpand('detail-2', this)"><span class="expand-label">View Code &amp; Technical Details ↓</span></div>
+            <div class="project-tags">
+        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Computer Vision</span>
+        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Embedded Systems</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Raspberry Pi</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Servo Motor</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">CAD</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">OpenCV</span>
+        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      </div>
+    </div>
+
+    <div id="detail-2" class="project-detail-panel" style="display:none;">
+<div class="detail-section">
           <div class="detail-label">System Architecture</div>
           <div class="arch-flow">
-            <div class="arch-step"><div class="arch-icon">📷</div><div class="arch-step-label">Picamera2</div><div class="arch-step-sub">640×480 feed</div></div>
+            <div class="arch-step"><div class="arch-step-label">Camera</div><div class="arch-step-sub">640×480 feed</div></div>
             <div class="arch-arrow">→</div>
-            <div class="arch-step"><div class="arch-icon">🧠</div><div class="arch-step-label">HOG Detector</div><div class="arch-step-sub">face_recognition</div></div>
+            <div class="arch-step"><div class="arch-step-label">HOG Detector</div><div class="arch-step-sub">face_recognition</div></div>
             <div class="arch-arrow">→</div>
-            <div class="arch-step"><div class="arch-icon">🔍</div><div class="arch-step-label">Encoding Match</div><div class="arch-step-sub">vs. pickle store</div></div>
+            <div class="arch-step"><div class="arch-step-label">Face Match</div><div class="arch-step-sub">vs. pickle store</div></div>
             <div class="arch-arrow">→</div>
-            <div class="arch-step"><div class="arch-icon">⏱</div><div class="arch-step-label">2s Timer</div><div class="arch-step-sub">anti-spoof confirm</div></div>
+            <div class="arch-step"><div class="arch-step-label">2s Confirm</div><div class="arch-step-sub">anti-spoof confirm</div></div>
             <div class="arch-arrow">→</div>
-            <div class="arch-step"><div class="arch-icon">🔓</div><div class="arch-step-label">Servo GPIO 18</div><div class="arch-step-sub">gpiozero unlock</div></div>
+            <div class="arch-step"><div class="arch-step-label">Servo Unlock</div><div class="arch-step-sub">gpiozero unlock</div></div>
           </div>
         </div>
         <div class="detail-section">
           <div class="detail-label">Key Technical Features</div>
           <div class="detail-findings">
-            <div class="finding-item"><div class="finding-icon">◈</div><div><strong>2-Second Anti-Spoof Timer</strong><p>Per-identity timer — only after 2 continuous seconds of confirmed match does the servo trigger. Prevents photo spoofing and accidental unlocks.</p></div></div>
-            <div class="finding-item"><div class="finding-icon">⊕</div><div><strong>Pickle-Based Encoding Store</strong><p>Known faces pre-encoded and stored in <code>encodings.pickle</code>. Live HOG embeddings compared using <code>face_recognition.compare_faces()</code>.</p></div></div>
-            <div class="finding-item"><div class="finding-icon">∿</div><div><strong>Camera Retry &amp; Cleanup Logic</strong><p>Up to 3 automatic retries on camera failure, with explicit <code>picam2.stop()</code> and object deletion between attempts to prevent resource leaks.</p></div></div>
-            <div class="finding-item"><div class="finding-icon">⚙</div><div><strong>Servo Control via GPIO 18</strong><p>gpiozero Servo with calibrated pulse widths (0.5ms–2.5ms). Position: −1 (0°) → 0 (90°) → 1 (180°) for precise lock/unlock.</p></div></div>
+            <div class="finding-item"><div class="finding-icon">—</div><div><strong>2-Second Confirmation Timer</strong><p>The lock won't trigger unless the same face is held for 2 full seconds. Stops it from firing on a photo or a quick walk-by.</p></div></div>
+            <div class="finding-item"><div class="finding-icon">—</div><div><strong>Pre-Encoded Face Store</strong><p>Known faces are encoded ahead of time and saved to <code>encodings.pickle</code>. At runtime it just compares the live frame against that file using <code>face_recognition.compare_faces()</code>.</p></div></div>
+            <div class="finding-item"><div class="finding-icon">—</div><div><strong>Camera Retry Logic</strong><p>If the camera fails to initialize it tries again up to 3 times, cleaning up the object between each attempt so the Pi doesn't hold onto a dead resource.</p></div></div>
+            <div class="finding-item"><div class="finding-icon"></div><div><strong>Servo Control via GPIO 18</strong><p>gpiozero Servo with calibrated pulse widths (0.5ms–2.5ms). Position: −1 (0°) → 0 (90°) → 1 (180°) for precise lock/unlock.</p></div></div>
           </div>
         </div>
-        <div class="detail-section">
-          <div class="detail-label">Demo Video</div>
-          <div class="video-embed-wrap">
-            <iframe src="https://www.youtube.com/embed/tXAPtyQ61dY" title="AI Facial Recognition Door Handle Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
-          </div>
-        </div>
+
         <div class="detail-section">
           <div class="detail-label">Core Recognition Loop</div>
           <pre class="code-block">import face_recognition
@@ -402,23 +436,15 @@ turn_servo_to(0)   # return to locked</pre>
             <div class="hw-item"><span class="hw-name">OpenCV</span><span class="hw-val">Frame capture &amp; display</span></div>
           </div>
         </div>
-      </div>
-      <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Computer Vision</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Embedded Systems</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Raspberry Pi</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Servo Motor</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">CAD</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">OpenCV</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
-      </div>
+        <div class="detail-section">
+          <div class="detail-label">Built with</div>
+          <p class="detail-text" style="color:var(--ink);">Dublin Padaloy &nbsp;&middot;&nbsp; Esau Portillo</p>
+        </div>
     </div>
 
-    <!-- PROJECT 02: QUANTUM -->
+    <!-- PROJECT 03: QUANTUM -->
     <div class="project-card reveal visible" style="--streak:#5c3d2e;--streak-text:#5c3d2e;">
-      <div class="project-index">02</div>
+      <div class="project-index">03</div>
       <div class="project-status">
         <div class="status-dot"></div>
         <span class="status-text" data-editable="" contenteditable="false">Complete</span>
@@ -431,19 +457,29 @@ turn_servo_to(0)   # return to locked</pre>
       </div>
       <input type="file" id="file-img-2" accept="image/*" style="display:none" onchange="loadImage(event,'img-2','img-wrap-2')">
       <h3 class="project-title" data-editable="" contenteditable="false">Deutsch-Jozsa Algorithm on Classical Machines</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">Research paper and Qiskit simulation exploring whether the Deutsch-Jozsa algorithm — long cited as proof of quantum superiority — can be replicated on classical hardware. Concludes that it can, but only with a transparent oracle, reframing what quantum speed-up means.</p>
-      <div class="project-expand-btn" onclick="toggleExpand(this)"><span class="expand-label">Read Research ↓</span></div>
-      <div class="project-detail" style="display:none;">
-        <div class="detail-section">
+      <p class="project-desc" data-editable="" contenteditable="false">A research paper I co-wrote examining whether the Deutsch-Jozsa algorithm actually proves quantum superiority, or whether a classical computer can replicate the same result. We found that it can, but only because the oracle used in the classical version is transparent — a different assumption than the quantum version makes.</p>
+      <div class="project-expand-btn" onclick="toggleExpand('detail-3', this)"><span class="expand-label">Read Research ↓</span></div>
+            <div class="project-tags">
+        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Quantum Computing</span>
+        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Research</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Qiskit</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
+        <span class="tag" data-removable="" data-editable="" contenteditable="false">Algorithm Analysis</span>
+        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      </div>
+    </div>
+
+    <div id="detail-3" class="project-detail-panel" style="display:none;">
+<div class="detail-section">
           <div class="detail-label">Abstract</div>
-          <p class="detail-text">The Deutsch-Jozsa algorithm has long been used as proof of quantum superiority. Using Qiskit, a classical simulation was built and tested for n&lt;20. Reviewing Johansson (2017) and Yavuz &amp; Yadav (2023), the research concludes the algorithm is classically simulatable — but only with a transparent oracle, not a true black-box.</p>
+          <p class="detail-text">The Deutsch-Jozsa algorithm gets cited a lot as proof that quantum computers are fundamentally better. We built a classical simulation in Qiskit and tested it for n&lt;20. It worked — but only because the oracle is transparent, meaning you can see the gates. That's a different assumption than the original quantum version makes, which changes what the result actually proves.</p>
         </div>
         <div class="detail-section">
           <div class="detail-label">Key Findings</div>
           <div class="detail-findings">
-            <div class="finding-item"><div class="finding-icon">⊕</div><div><strong>Classical Simulation Works (n&lt;20)</strong><p>Qiskit simulation achieves identical results to the quantum circuit — constant returns all zeros, balanced returns non-zero with a single query.</p></div></div>
-            <div class="finding-item"><div class="finding-icon">◈</div><div><strong>Transparent Oracle Limitation</strong><p>Visible CNOT gates replace the quantum black-box oracle, enabling phase kick-back — but the oracle is no longer truly hidden.</p></div></div>
-            <div class="finding-item"><div class="finding-icon">∿</div><div><strong>Quantum Speed-Up Reconsidered</strong><p>Johansson (2017) and Yavuz &amp; Yadav (2023) independently confirm classical simulatability — Deutsch-Jozsa is not the definitive proof of quantum advantage it once seemed.</p></div></div>
+            <div class="finding-item"><div class="finding-icon">—</div><div><strong>Classical Simulation Works (n&lt;20)</strong><p>The simulation gets the same result as the quantum circuit every time — constant functions return all zeros, balanced functions return non-zero, in a single query.</p></div></div>
+            <div class="finding-item"><div class="finding-icon">—</div><div><strong>The Oracle Isn't Actually a Black Box</strong><p>To make it work classically, the oracle has to be transparent — you can see the CNOT gates. The original algorithm assumes you can't, so it's not a true apples-to-apples comparison.</p></div></div>
+            <div class="finding-item"><div class="finding-icon">—</div><div><strong>Quantum Speed-Up Isn't That Clear-Cut</strong><p>Johansson (2017) and Yavuz &amp; Yadav (2023) both reached similar conclusions independently. D-J is a useful teaching tool but it's not the slam-dunk proof of quantum advantage people treat it as.</p></div></div>
           </div>
         </div>
         <div class="detail-section">
@@ -483,44 +519,8 @@ turn_servo_to(0)   # return to locked</pre>
         </div>
         <div class="detail-section">
           <div class="detail-label">Co-authored with</div>
-          <p class="detail-text" style="color:var(--ink);">Andy Norman &nbsp;·&nbsp; Loyola University Chicago</p>
+          <p class="detail-text" style="color:var(--ink);">Co-written with Andy Norman, Loyola University Maryland</p>
         </div>
-      </div>
-      <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Quantum Computing</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Research</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Qiskit</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Algorithm Analysis</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
-      </div>
-    </div>
-
-    <!-- PROJECT 03: AR4 -->
-    <div class="project-card reveal visible" style="--streak:#a0522d;--streak-text:#a0522d;">
-      <div class="project-index">03</div>
-      <div class="project-status">
-        <div class="status-dot pulse"></div>
-        <span class="status-text" data-editable="" contenteditable="false">In Progress</span>
-        <select class="status-select" onchange="updateStatus(this)"><option>Complete</option><option selected="">In Progress</option><option>Coming Soon</option></select>
-      </div>
-      <div class="project-image-wrap" id="img-wrap-3" onclick="triggerUpload('img-3','img-wrap-3')">
-        <div class="img-placeholder-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Click to add project photo</div>
-        <img id="img-3" src="" alt="" style="display:none;">
-        <div class="img-upload-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path></svg><span>Upload Image</span></div>
-      </div>
-      <input type="file" id="file-img-3" accept="image/*" style="display:none" onchange="loadImage(event,'img-3','img-wrap-3')">
-      <h3 class="project-title" data-editable="" contenteditable="false">AR4 Robotic Arm Movement &amp; Control</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">Active development on the AR4 robotic arm — programming precise movement sequences, tuning stepper motor control, and exploring path-planning logic. Bridges low-level motor drivers with higher-level kinematic calculations for smooth, repeatable actuation.</p>
-      <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Robotics</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Motor Control</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Arduino</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">C++</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Stepper Drivers</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Kinematics</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
-      </div>
     </div>
 
     <!-- PROJECT 04: UNDERWATER -->
@@ -538,7 +538,7 @@ turn_servo_to(0)   # return to locked</pre>
       </div>
       <input type="file" id="file-img-4" accept="image/*" style="display:none" onchange="loadImage(event,'img-4','img-wrap-4')">
       <h3 class="project-title" data-editable="" contenteditable="false">Underwater Camera Stabilization Rig</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">Designing a custom mechanical mount for a fishing underwater camera — engineered to resist current drag and hold a fixed, stable orientation beneath the surface. Focuses on hydrodynamic form factor, material selection, and passive stabilization principles.</p>
+      <p class="project-desc" data-editable="" contenteditable="false">Working on a mount for an underwater fishing camera that stays stable in current. The main challenge is getting the shape and weight right so it holds its angle without needing any active stabilization.</p>
       <div class="project-tags">
         <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Mechanical Design</span>
         <span class="tag accent" data-removable="" data-editable="" contenteditable="false">CAD</span>
@@ -548,6 +548,8 @@ turn_servo_to(0)   # return to locked</pre>
         <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
       </div>
     </div>
+
+  </div>
 
   </div>
 </section>
@@ -570,7 +572,6 @@ turn_servo_to(0)   # return to locked</pre>
       <div class="skill-category" data-editable="" contenteditable="false">Software</div>
       <ul class="skill-list">
         <li><span data-editable="" contenteditable="false">Python</span></li>
-        <li><span data-editable="" contenteditable="false">C / C++</span></li>
         <li><span data-editable="" contenteditable="false">Computer Vision (OpenCV)</span></li>
         <li><span data-editable="" contenteditable="false">Quantum Computing (Qiskit)</span></li>
         <li><span data-editable="" contenteditable="false">MATLAB</span></li>
@@ -589,37 +590,14 @@ turn_servo_to(0)   # return to locked</pre>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="section-header reveal visible"><span class="section-num">03</span><h2 class="section-title" data-editable="" contenteditable="false">About</h2></div>
-  <div class="about-layout">
-    <div class="about-text reveal visible">
-      <p data-editable="" contenteditable="false">I’m <strong>Daniel Mejenny</strong>, an Electrical Engineering student with a strong interest in building systems at the edge of what’s possible — whether that’s teaching a door handle to recognize a face, or simulating a quantum algorithm on classical silicon.</p>
-      <p data-editable="" contenteditable="false">My work spans <strong>embedded hardware</strong>, <strong>machine learning</strong>, <strong>robotics</strong>, and <strong>quantum computing research</strong>. I’m drawn to problems that force hardware and software to speak the same language.</p>
-      <p data-editable="" contenteditable="false">Currently working on the AR4 robotic arm build, and planning a mechanical dive into underwater camera stabilization. Always looking for the next interesting challenge.</p>
-      <blockquote data-editable="" contenteditable="false">“Engineering is the art of making what you want from what you have.”</blockquote>
-    </div>
-    <div class="about-aside reveal visible">
-      <div class="aside-head">// profile.json</div>
-      <div class="aside-body">
-        <div class="aside-row"><span>Role</span><span data-editable="" contenteditable="false">EE Student</span></div>
-        <div class="aside-row"><span>Focus</span><span data-editable="" contenteditable="false">Hardware + AI</span></div>
-        <div class="aside-row"><span>Status</span><span data-editable="" contenteditable="false">Building</span></div>
-        <div class="aside-row"><span>Projects</span><span data-editable="" contenteditable="false">4 (1 active)</span></div>
-        <div class="aside-row"><span>Interests</span><span data-editable="" contenteditable="false">Robotics · Quantum · CV</span></div>
-        <div class="aside-row"><span>Available</span><span data-editable="" contenteditable="false">Yes — reach out</span></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- CONTACT -->
 <section id="contact">
-  <div class="section-header reveal visible"><span class="section-num">04</span><h2 class="section-title" data-editable="" contenteditable="false">Contact</h2></div>
+  <div class="section-header reveal visible"><span class="section-num">03</span><h2 class="section-title" data-editable="" contenteditable="false">Contact</h2></div>
   <div class="contact-layout">
     <div class="contact-main reveal visible">
       <h3 data-editable="" contenteditable="false">Let’s Connect</h3>
-      <p data-editable="" contenteditable="false">Open to internships, research collaborations, and interesting project conversations.</p>
+      <p data-editable="" contenteditable="false">Feel free to reach out about internships, research, or if you want to talk about a project.</p>
       <a href="mailto:dmejeny@gmail.com" class="contact-link" target="_blank" rel="noopener">
         <span class="contact-link-icon">Email</span>
         <span class="contact-link-text" data-editable="" contenteditable="false">dmejeny@gmail.com</span>
@@ -632,6 +610,7 @@ turn_servo_to(0)   # return to locked</pre>
         <span class="contact-link-icon">GitHub</span>
         <span class="contact-link-text" data-editable="" contenteditable="false">github.com/Daniel4Mej</span>
       </a>
+
     </div>
     <div class="contact-aside reveal visible">
       <div>
@@ -692,12 +671,15 @@ turn_servo_to(0)   # return to locked</pre>
   }
 
   // EXPAND/COLLAPSE
-  function toggleExpand(btn) {
-    const detail = btn.nextElementSibling;
+  function toggleExpand(panelId, btn) {
+    const detail = document.getElementById(panelId);
     const label = btn.querySelector('.expand-label');
     const isOpen = detail.style.display !== 'none';
     detail.style.display = isOpen ? 'none' : 'block';
-    label.innerHTML = isOpen ? btn.dataset.openText || 'View Details &darr;' : 'Close &uarr;';
+    label.innerHTML = isOpen
+      ? (panelId === 'detail-2' ? 'View Code &amp; Technical Details &darr;' : 'Read Research &darr;')
+      : 'Close &uarr;';
+    if (!isOpen) detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // STATUS UPDATE
@@ -752,4 +734,18 @@ turn_servo_to(0)   # return to locked</pre>
   // DOWNLOAD
   function savePortfolio() {
     const toolbar = document.getElementById('edit-toolbar');
-    c
+    const wasEdit = editMode;
+    if (wasEdit) toggleEditMode();
+    toolbar.style.display = 'none';
+    const blob = new Blob(['<!DOCTYPE html>\n' + document.documentElement.outerHTML], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'daniel-mejenny-portfolio.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toolbar.style.display = 'flex';
+    if (wasEdit) toggleEditMode();
+  }
+</script>
+</body>
+</html>
