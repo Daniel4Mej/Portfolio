@@ -620,15 +620,15 @@ turn_servo_to(0)   # return to locked</pre>
     <div class="contact-main reveal visible">
       <h3 data-editable="" contenteditable="false">Let’s Connect</h3>
       <p data-editable="" contenteditable="false">Open to internships, research collaborations, and interesting project conversations.</p>
-      <a href="mailto:dmejeny@gmail.com" class="contact-link">
+      <a href="mailto:dmejeny@gmail.com" class="contact-link" target="_blank" rel="noopener">
         <span class="contact-link-icon">Email</span>
         <span class="contact-link-text" data-editable="" contenteditable="false">dmejeny@gmail.com</span>
       </a>
-      <a href="https://www.linkedin.com/in/danielmejenny" class="contact-link" target="_blank" rel="noopener">
+      <a href="https://www.linkedin.com/in/danmejenny" class="contact-link" target="_blank" rel="noopener">
         <span class="contact-link-icon">LinkedIn</span>
-        <span class="contact-link-text" data-editable="" contenteditable="false">linkedin.com/in/danielmejenny</span>
+        <span class="contact-link-text" data-editable="" contenteditable="false">linkedin.com/in/danmejenny</span>
       </a>
-      <a href="https://github.com/Daniel4Mej" class="contact-link" target="_blank" rel="noopener">
+      <a href="https://github.com/Daniel4Mej?tab=repositories" class="contact-link" target="_blank" rel="noopener">
         <span class="contact-link-icon">GitHub</span>
         <span class="contact-link-text" data-editable="" contenteditable="false">github.com/Daniel4Mej</span>
       </a>
@@ -649,7 +649,6 @@ turn_servo_to(0)   # return to locked</pre>
 
 <footer>
   <p>© 2025 <span class="mark" data-editable="" contenteditable="false">Daniel Mejenny</span> — <span data-editable="" contenteditable="false">Electrical Engineering</span></p>
-  <p>Portfolio <span class="mark">v3.0</span></p>
 </footer>
 
 <script>
@@ -753,8 +752,4 @@ turn_servo_to(0)   # return to locked</pre>
   // DOWNLOAD
   function savePortfolio() {
     const toolbar = document.getElementById('edit-toolbar');
-    const wasEdit = editMode;
-    if (wasEdit) toggleEditMode();
-    toolbar.style.display = 'none';
-    const blob = new Blob(['<!DOCTYPE html>\n' + document.documentElement.outerHTML], { type: 'text/html' });
-    const a = document.createElem
+    c
