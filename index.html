@@ -181,6 +181,11 @@
       .project-card-image img{height:220px;}
     }
 
+
+    /* DOWNLOAD BUTTONS */
+    .download-btn{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--ink);background:var(--white);border:1px solid var(--rule);padding:10px 18px;text-decoration:none;transition:border-color 0.2s,color 0.2s;}
+    .download-btn:hover{border-color:var(--brown-mid);color:var(--brown-mid);}
+
     /* STATUS SELECT */
     .status-select{display:none;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;border:1px dashed var(--brown-light);background:var(--white);color:var(--ink);padding:4px 8px;cursor:pointer;margin-left:8px;}
     body.edit-mode .status-select{display:inline-block;}
@@ -298,11 +303,114 @@
             <span class="tag" data-removable="" data-editable="" contenteditable="false">Kinematics</span>
             <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
           </div>
+          <div class="project-expand-btn" onclick="toggleExpand('detail-1', this)"><span class="expand-label">View Technical Details ↓</span></div>
         </div>
         <div class="project-card-image" style="display:flex;align-items:center;justify-content:center;background:var(--paper);border:1px solid var(--rule);height:280px;">
           <span style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Photo coming soon</span>
         </div>
       </div>
+    </div>
+
+    <div id="detail-1" class="project-detail-panel" style="display:none;">
+
+      <div class="detail-section">
+        <div class="detail-label">System Architecture</div>
+        <div class="arch-flow">
+          <div class="arch-step"><div class="arch-step-label">ARbot.cal</div><div class="arch-step-sub">factory limits</div></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-step"><div class="arch-step-label">manual_cal.py</div><div class="arch-step-sub">physical limit scan</div></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-step"><div class="arch-step-label">ARbot_safe.cal</div><div class="arch-step-sub">verified limits</div></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-step"><div class="arch-step-label">New_Movement.py</div><div class="arch-step-sub">safe motion layer</div></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-step"><div class="arch-step-label">AR4 Arm</div><div class="arch-step-sub">Teensy 4.1 / serial</div></div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-label">Problems I Had to Solve</div>
+        <div class="detail-findings">
+          <div class="finding-item"><div class="finding-icon">—</div><div>
+            <strong>E-stop race condition in Teensy firmware</strong>
+            <p>Interrupt fired before the drive loop wrote back the real position — every E-stop reported <code>A0.000</code>. Fixed by ignoring the interrupt response entirely and querying <code>RP</code> after reconnect.</p>
+          </div></div>
+          <div class="finding-item"><div class="finding-icon">—</div><div>
+            <strong>SP command was overwriting good data</strong>
+            <p>Recovery code sent SP with stale zeros right after reconnect, destroying the Teensy's correct step counters. Fix: never send SP before querying RP.</p>
+          </div></div>
+          <div class="finding-item"><div class="finding-icon">—</div><div>
+            <strong>Asymmetric joint limits broke step math</strong>
+            <p>J2 defaults to 90°/42° — after FK resets both to 90°, anything that reloaded the original values made moves go the wrong direction. Fixed by resending FK before every move.</p>
+          </div></div>
+          <div class="finding-item"><div class="finding-icon">—</div><div>
+            <strong>False collision faults stopping calibration early</strong>
+            <p>FK changes axis limits mid-session, causing encoder drift that the Teensy flags as a collision. Fixed by running all joints in open loop during calibration.</p>
+          </div></div>
+          <div class="finding-item"><div class="finding-icon">—</div><div>
+            <strong>Axis limit rejections on J4 and J6</strong>
+            <p>From +84°, commanding -170° is 254° of travel — Teensy rejects it. Fixed by returning to home between the two direction tests so each starts from 0°.</p>
+          </div></div>
+          <div class="finding-item"><div class="finding-icon">—</div><div>
+            <strong>Stale error strings polluting position queries</strong>
+            <p>Leftover <code>EL...</code> fault responses in the serial buffer caused RP to return garbage. Fixed by discarding any response that doesn't start with <code>A</code> and re-reading.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-label">E-Stop Recovery (Core Fix)</div>
+        <pre class="code-block">def find_limit(robot, joint, direction, cur):
+    estop = do_move(robot, targets, cur)
+    if estop:
+        release_estop(robot)            # reconnect — no SP yet
+        actual = query_position(robot)  # RP reads correct J{n}StepM
+        stopped = actual.get(joint)     # real stopped angle
+        send_sp(robot, new_cur)         # only now sync position
+        save(base_cal, safe_pos)        # write to ARbot_safe.cal</pre>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-label">Safe Motion Layer</div>
+        <p class="detail-text" style="margin-bottom:14px;">Every move is checked against <code>ARbot_safe.cal</code> in real time with a 2° safety margin. The file is re-read on every command — if limits are updated, they take effect immediately.</p>
+        <pre class="code-block">def check(self, j1, j2, j3, j4, j5, j6):
+    limits = self.read_limits()   # reads ARbot_safe.cal live
+    for j in range(1, 7):
+        if angles[j-1] &gt; pos_lim - 2.0:
+            errors.append(f"J{j} exceeds limit")
+    return len(errors) == 0, errors</pre>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-label">Hardware Stack</div>
+        <div class="hw-grid">
+          <div class="hw-item"><span class="hw-name">AR4 Robotic Arm</span><span class="hw-val">6-axis, stepper driven</span></div>
+          <div class="hw-item"><span class="hw-name">Teensy 4.1</span><span class="hw-val">Main controller / serial</span></div>
+          <div class="hw-item"><span class="hw-name">AR4_api (Python)</span><span class="hw-val">Serial command interface</span></div>
+          <div class="hw-item"><span class="hw-name">Limit switches</span><span class="hw-val">J1, J2, J3, J6 positive dir</span></div>
+          <div class="hw-item"><span class="hw-name">ARbot_safe.cal</span><span class="hw-val">Measured physical limits</span></div>
+          <div class="hw-item"><span class="hw-name">Open loop mode</span><span class="hw-val">Encoder bypass during cal</span></div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-label">Download Source Files</div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+          <a href="files/manual_cal.py" download class="download-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            manual_cal.py
+          </a>
+          <a href="files/New_Movement.py" download class="download-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            New_Movement.py
+          </a>
+          <a href="files/AR4_teensy41_sketch_v6_3_patched.ino" download class="download-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Teensy Firmware (.ino)
+          </a>
+        </div>
+      </div>
+
     </div>
 
     <!-- PROJECT 02: DOOR HANDLE -->
@@ -464,6 +572,24 @@ turn_servo_to(0)   # return to locked</pre>
             </div>
           </div>
         </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Download Source Files</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <a href="files/face_recognition_main.py" download class="download-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Face Recognition Main
+            </a>
+            <a href="files/servo_control.py" download class="download-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Servo Control
+            </a>
+            <a href="files/encode_faces.py" download class="download-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Face Encoder
+            </a>
+          </div>
+        </div>
         <div class="detail-section">
           <div class="detail-label">Built with</div>
           <p class="detail-text" style="color:var(--ink);">Dublin Padaloy &nbsp;&middot;&nbsp; Esau Portillo</p>
@@ -545,6 +671,16 @@ turn_servo_to(0)   # return to locked</pre>
             [1] Johansson, N., Larsson, JÅ. “Efficient classical simulation of the Deutsch–Jozsa and Simon’s algorithms.” <em>Quantum Inf Process</em> 16, 233 (2017).<br>
             [2] Yavuz, D.D., Yadav, A. “Simulation of quantum algorithms using classical probabilistic bits and circuits.” <em>arXiv:2307.14452</em> (2023).
           </p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-label">Download</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <a href="files/deutsch-jozsa-research.pdf" download class="download-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Full Research Paper (PDF)
+            </a>
+          </div>
         </div>
         <div class="detail-section">
           <div class="detail-label">Co-authored with</div>
@@ -706,9 +842,12 @@ turn_servo_to(0)   # return to locked</pre>
     const label = btn.querySelector('.expand-label');
     const isOpen = detail.style.display !== 'none';
     detail.style.display = isOpen ? 'none' : 'block';
-    label.innerHTML = isOpen
-      ? (panelId === 'detail-2' ? 'View Code &amp; Technical Details &darr;' : 'Read Research &darr;')
-      : 'Close &uarr;';
+    const labels = {
+      'detail-1': 'View Technical Details &darr;',
+      'detail-2': 'View Code &amp; Technical Details &darr;',
+      'detail-3': 'Read Research &darr;'
+    };
+    label.innerHTML = isOpen ? (labels[panelId] || 'Expand &darr;') : 'Close &uarr;';
     if (!isOpen) detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
