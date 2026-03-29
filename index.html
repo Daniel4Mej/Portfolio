@@ -305,8 +305,8 @@
           </div>
           <div class="project-expand-btn" onclick="toggleExpand('detail-1', this)"><span class="expand-label">View Technical Details ↓</span></div>
         </div>
-        <div class="project-card-image" style="display:flex;align-items:center;justify-content:center;background:var(--paper);border:1px solid var(--rule);height:280px;">
-          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Photo coming soon</span>
+        <div class="project-card-image">
+          <img src="images/ar4-arm.jpg" alt="AR4 Robotic Arm">
         </div>
       </div>
     </div>
@@ -382,6 +382,30 @@
       </div>
 
       <div class="detail-section">
+        <div class="detail-label">Project Photos</div>
+        <div class="detail-images two-col">
+          <div class="detail-img-wrap">
+            <img src="images/ar4-installing.jpg" alt="Installing AR4 into environment">
+            <div class="img-caption">Setting up the arm and debugging the serial connection</div>
+          </div>
+          <div class="detail-img-wrap">
+            <img src="images/ar4-moving.jpg" alt="AR4 moving in environment">
+            <div class="img-caption">Running movement sequences in the environment</div>
+          </div>
+        </div>
+        <div class="detail-images two-col" style="margin-top:16px;">
+          <div class="detail-img-wrap">
+            <img src="images/ar4-cal-code.jpg" alt="Creating calibration code">
+            <div class="img-caption">Writing and testing the movement calibration code</div>
+          </div>
+          <div class="detail-img-wrap">
+            <img src="images/ar4-simulator.jpg" alt="AR4 Virtual Robot Viewer">
+            <div class="img-caption">AR4 Virtual Robot Viewer — joint angle simulation</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
         <div class="detail-label">Hardware Stack</div>
         <div class="hw-grid">
           <div class="hw-item"><span class="hw-name">AR4 Robotic Arm</span><span class="hw-val">6-axis, stepper driven</span></div>
@@ -432,7 +456,7 @@
             <span class="tag" data-removable="" data-editable="" contenteditable="false">Raspberry Pi</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">Servo Motor</span>
-            <span class="tag" data-removable="" data-editable="" contenteditable="false">CAD</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">SolidWorks</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">OpenCV</span>
             <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
@@ -544,7 +568,7 @@ turn_servo_to(0)   # return to locked</pre>
             <div class="hw-item"><span class="hw-name">Raspberry Pi</span><span class="hw-val">Main compute + GPIO</span></div>
             <div class="hw-item"><span class="hw-name">Picamera2</span><span class="hw-val">640×480 XRGB feed</span></div>
             <div class="hw-item"><span class="hw-name">Servo Motor</span><span class="hw-val">GPIO 18, 0.5–2.5ms PWM</span></div>
-            <div class="hw-item"><span class="hw-name">Custom Enclosure</span><span class="hw-val">CAD-designed, 3D printed</span></div>
+            <div class="hw-item"><span class="hw-name">Custom Enclosure</span><span class="hw-val">SolidWorks-designed, 3D printed</span></div>
             <div class="hw-item"><span class="hw-name">face_recognition</span><span class="hw-val">dlib HOG + CNN encoder</span></div>
             <div class="hw-item"><span class="hw-name">OpenCV</span><span class="hw-val">Frame capture &amp; display</span></div>
           </div>
@@ -553,8 +577,8 @@ turn_servo_to(0)   # return to locked</pre>
           <div class="detail-label">Project Photos</div>
           <div class="detail-images two-col">
             <div class="detail-img-wrap">
-              <img src="images/door-handle-cad.jpg" alt="SolidWorks CAD design">
-              <div class="img-caption">SolidWorks CAD — enclosure and mount design</div>
+              <img src="images/door-handle-cad.jpg" alt="SolidWorks SolidWorks design">
+              <div class="img-caption">SolidWorks SolidWorks — enclosure and mount design</div>
             </div>
             <div class="detail-img-wrap">
               <img src="images/door-handle-wiring.jpg" alt="Internal wiring">
@@ -573,23 +597,6 @@ turn_servo_to(0)   # return to locked</pre>
           </div>
         </div>
 
-        <div class="detail-section">
-          <div class="detail-label">Download Source Files</div>
-          <div style="display:flex;flex-wrap:wrap;gap:12px;">
-            <a href="files/face_recognition_main.py" download class="download-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Face Recognition Main
-            </a>
-            <a href="files/servo_control.py" download class="download-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Servo Control
-            </a>
-            <a href="files/encode_faces.py" download class="download-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Face Encoder
-            </a>
-          </div>
-        </div>
         <div class="detail-section">
           <div class="detail-label">Built with</div>
           <p class="detail-text" style="color:var(--ink);">Dublin Padaloy &nbsp;&middot;&nbsp; Esau Portillo</p>
@@ -702,7 +709,7 @@ turn_servo_to(0)   # return to locked</pre>
           <p class="project-desc" data-editable="" contenteditable="false">Working on a mount for an underwater fishing camera that stays stable in current. The main challenge is getting the shape and weight right so it holds its angle without needing any active stabilization.</p>
           <div class="project-tags">
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Mechanical Design</span>
-            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">CAD</span>
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">SolidWorks</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">Hydrodynamics</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
             <span class="tag" data-removable="" data-editable="" contenteditable="false">Materials</span>
@@ -746,7 +753,7 @@ turn_servo_to(0)   # return to locked</pre>
     <div class="skill-block reveal visible">
       <div class="skill-category" data-editable="" contenteditable="false">Engineering</div>
       <ul class="skill-list">
-        <li><span data-editable="" contenteditable="false">CAD &amp; Mechanical Design</span></li>
+        <li><span data-editable="" contenteditable="false">SolidWorks &amp; Mechanical Design</span></li>
         <li><span data-editable="" contenteditable="false">3D Printing &amp; Prototyping</span></li>
         <li><span data-editable="" contenteditable="false">Robotics &amp; Kinematics</span></li>
         <li><span data-editable="" contenteditable="false">Signal Processing</span></li>
