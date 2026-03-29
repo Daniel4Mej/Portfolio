@@ -169,6 +169,18 @@
     .badge{border:1px solid rgba(250,249,247,0.12);padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.68rem;color:rgba(250,249,247,0.45);letter-spacing:2px;display:flex;align-items:center;gap:12px;}
     .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--brown-light);flex-shrink:0;}
 
+
+    /* CARD SIDE-BY-SIDE LAYOUT */
+    .project-card-inner{display:flex;gap:40px;align-items:flex-start;}
+    .project-card-text{flex:1;min-width:0;}
+    .project-card-image{width:380px;flex-shrink:0;}
+    .project-card-image img{width:100%;height:280px;object-fit:cover;object-position:center;border:1px solid var(--rule);display:block;}
+    @media(max-width:900px){
+      .project-card-inner{flex-direction:column;}
+      .project-card-image{width:100%;}
+      .project-card-image img{height:220px;}
+    }
+
     /* STATUS SELECT */
     .status-select{display:none;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;border:1px dashed var(--brown-light);background:var(--white);color:var(--ink);padding:4px 8px;cursor:pointer;margin-left:8px;}
     body.edit-mode .status-select{display:inline-block;}
@@ -273,22 +285,23 @@
         <span class="status-text" data-editable="" contenteditable="false">In Progress</span>
         <select class="status-select" onchange="updateStatus(this)"><option>Complete</option><option selected="">In Progress</option><option>Coming Soon</option></select>
       </div>
-      <div class="project-image-wrap" id="img-wrap-3" onclick="triggerUpload('img-3','img-wrap-3')">
-        <div class="img-placeholder-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Click to add project photo</div>
-        <img id="img-3" src="" alt="" style="display:none;">
-        <div class="img-upload-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path></svg><span>Upload Image</span></div>
-      </div>
-      <input type="file" id="file-img-3" accept="image/*" style="display:none" onchange="loadImage(event,'img-3','img-wrap-3')">
-      <h3 class="project-title" data-editable="" contenteditable="false">AR4 Robotic Arm Movement &amp; Control</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">Currently working on programming the AR4 robotic arm. Mostly focused on getting the movement sequences right and tuning the stepper motors — there's a lot of back and forth between the low-level motor control and the higher-level path logic.</p>
-      <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Robotics</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Motor Control</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Arduino</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">C++</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Stepper Drivers</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Kinematics</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      <div class="project-card-inner">
+        <div class="project-card-text">
+          <h3 class="project-title" data-editable="" contenteditable="false">AR4 Robotic Arm Movement &amp; Control</h3>
+          <p class="project-desc" data-editable="" contenteditable="false">Currently working on programming the AR4 robotic arm. Mostly focused on getting the movement sequences right and tuning the stepper motors — there's a lot of back and forth between the low-level motor control and the higher-level path logic.</p>
+          <div class="project-tags">
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Robotics</span>
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Motor Control</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Arduino</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">C++</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Stepper Drivers</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Kinematics</span>
+            <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+          </div>
+        </div>
+        <div class="project-card-image" style="display:flex;align-items:center;justify-content:center;background:var(--paper);border:1px solid var(--rule);height:280px;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Photo coming soon</span>
+        </div>
       </div>
     </div>
 
@@ -300,22 +313,26 @@
         <span class="status-text" data-editable="" contenteditable="false">Complete</span>
         <select class="status-select" onchange="updateStatus(this)"><option>Complete</option><option>In Progress</option><option>Coming Soon</option></select>
       </div>
-      <div class="project-image-wrap has-img" id="img-wrap-1">
-        <img id="img-1" src="images/door-handle-setup.jpg" alt="AI-Powered Facial Recognition Door Handle" style="display:block;">
-      </div>
-      <h3 class="project-title" data-editable="" contenteditable="false">AI-Powered Facial Recognition Door Handle</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">A smart lock I built using a Raspberry Pi that recognizes faces in real time and uses a servo motor to unlock a door handle. I trained it on my own face encodings, and added a 2-second confirmation window so it doesn't trigger on a quick glance or a photo.</p>
-      <div class="project-expand-btn" onclick="toggleExpand('detail-2', this)"><span class="expand-label">View Code &amp; Technical Details ↓</span></div>
-            <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Computer Vision</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Embedded Systems</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Raspberry Pi</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Servo Motor</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">CAD</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">OpenCV</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      <div class="project-card-inner">
+        <div class="project-card-text">
+          <h3 class="project-title" data-editable="" contenteditable="false">AI-Powered Facial Recognition Door Handle</h3>
+          <p class="project-desc" data-editable="" contenteditable="false">A smart lock I built using a Raspberry Pi that recognizes faces in real time and uses a servo motor to unlock a door handle. I trained it on my own face encodings, and added a 2-second confirmation window so it doesn't trigger on a quick glance or a photo.</p>
+          <div class="project-expand-btn" onclick="toggleExpand('detail-2', this)"><span class="expand-label">View Code &amp; Technical Details ↓</span></div>
+          <div class="project-tags">
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Computer Vision</span>
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Embedded Systems</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Raspberry Pi</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Servo Motor</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">CAD</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">OpenCV</span>
+            <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+          </div>
+        </div>
+        <div class="project-card-image">
+          <img src="images/door-handle-setup.jpg" alt="AI-Powered Facial Recognition Door Handle">
+        </div>
       </div>
     </div>
 
@@ -461,22 +478,23 @@ turn_servo_to(0)   # return to locked</pre>
         <span class="status-text" data-editable="" contenteditable="false">Complete</span>
         <select class="status-select" onchange="updateStatus(this)"><option>Complete</option><option>In Progress</option><option>Coming Soon</option></select>
       </div>
-      <div class="project-image-wrap" id="img-wrap-2" onclick="triggerUpload('img-2','img-wrap-2')">
-        <div class="img-placeholder-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Click to add project photo</div>
-        <img id="img-2" src="" alt="" style="display:none;">
-        <div class="img-upload-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path></svg><span>Upload Image</span></div>
-      </div>
-      <input type="file" id="file-img-2" accept="image/*" style="display:none" onchange="loadImage(event,'img-2','img-wrap-2')">
-      <h3 class="project-title" data-editable="" contenteditable="false">Deutsch-Jozsa Algorithm on Classical Machines</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">A research paper I co-wrote examining whether the Deutsch-Jozsa algorithm actually proves quantum superiority, or whether a classical computer can replicate the same result. We found that it can, but only because the oracle used in the classical version is transparent — a different assumption than the quantum version makes.</p>
-      <div class="project-expand-btn" onclick="toggleExpand('detail-3', this)"><span class="expand-label">Read Research ↓</span></div>
-            <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Quantum Computing</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Research</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Qiskit</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Algorithm Analysis</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      <div class="project-card-inner">
+        <div class="project-card-text">
+          <h3 class="project-title" data-editable="" contenteditable="false">Deutsch-Jozsa Algorithm on Classical Machines</h3>
+          <p class="project-desc" data-editable="" contenteditable="false">A research paper I co-wrote examining whether the Deutsch-Jozsa algorithm actually proves quantum superiority, or whether a classical computer can replicate the same result. We found that it can, but only because the oracle used in the classical version is transparent — a different assumption than the quantum version makes.</p>
+          <div class="project-expand-btn" onclick="toggleExpand('detail-3', this)"><span class="expand-label">Read Research ↓</span></div>
+          <div class="project-tags">
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Quantum Computing</span>
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Research</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Qiskit</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Python</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Algorithm Analysis</span>
+            <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+          </div>
+        </div>
+        <div class="project-card-image">
+          <img src="images/quantum-circuit-comparison.png" alt="Quantum Circuit Comparison">
+        </div>
       </div>
     </div>
 
@@ -542,21 +560,22 @@ turn_servo_to(0)   # return to locked</pre>
         <span class="status-text" data-editable="" contenteditable="false">Coming Soon</span>
         <select class="status-select" onchange="updateStatus(this)"><option>Complete</option><option>In Progress</option><option selected="">Coming Soon</option></select>
       </div>
-      <div class="project-image-wrap" id="img-wrap-4" onclick="triggerUpload('img-4','img-wrap-4')">
-        <div class="img-placeholder-text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Click to add project photo</div>
-        <img id="img-4" src="" alt="" style="display:none;">
-        <div class="img-upload-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path></svg><span>Upload Image</span></div>
-      </div>
-      <input type="file" id="file-img-4" accept="image/*" style="display:none" onchange="loadImage(event,'img-4','img-wrap-4')">
-      <h3 class="project-title" data-editable="" contenteditable="false">Underwater Camera Stabilization Rig</h3>
-      <p class="project-desc" data-editable="" contenteditable="false">Working on a mount for an underwater fishing camera that stays stable in current. The main challenge is getting the shape and weight right so it holds its angle without needing any active stabilization.</p>
-      <div class="project-tags">
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Mechanical Design</span>
-        <span class="tag accent" data-removable="" data-editable="" contenteditable="false">CAD</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Hydrodynamics</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
-        <span class="tag" data-removable="" data-editable="" contenteditable="false">Materials</span>
-        <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+      <div class="project-card-inner">
+        <div class="project-card-text">
+          <h3 class="project-title" data-editable="" contenteditable="false">Underwater Camera Stabilization Rig</h3>
+          <p class="project-desc" data-editable="" contenteditable="false">Working on a mount for an underwater fishing camera that stays stable in current. The main challenge is getting the shape and weight right so it holds its angle without needing any active stabilization.</p>
+          <div class="project-tags">
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Mechanical Design</span>
+            <span class="tag accent" data-removable="" data-editable="" contenteditable="false">CAD</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Hydrodynamics</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">3D Printing</span>
+            <span class="tag" data-removable="" data-editable="" contenteditable="false">Materials</span>
+            <button class="tag-add-btn" onclick="addTag(this)">+ Add Tag</button>
+          </div>
+        </div>
+        <div class="project-card-image">
+          <img src="images/underwater-camera.jpg" alt="1000TVL IP68 Underwater Camera">
+        </div>
       </div>
     </div>
 
@@ -609,9 +628,9 @@ turn_servo_to(0)   # return to locked</pre>
     <div class="contact-main reveal visible">
       <h3 data-editable="" contenteditable="false">Let’s Connect</h3>
       <p data-editable="" contenteditable="false">Feel free to reach out about internships, research, or if you want to talk about a project.</p>
-      <a href="mailto:dmejeny@gmail.com" class="contact-link">
+      <a href="mailto:dmejenny@gmail.com" target="_blank" rel="noopener" class="contact-link">
         <span class="contact-link-icon">Email</span>
-        <span class="contact-link-text" data-editable="" contenteditable="false">dmejeny@gmail.com</span>
+        <span class="contact-link-text" data-editable="" contenteditable="false">dmejenny@gmail.com</span>
       </a>
       <a href="https://www.linkedin.com/in/danmejenny" class="contact-link" target="_blank" rel="noopener">
         <span class="contact-link-icon">LinkedIn</span>
