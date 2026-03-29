@@ -51,18 +51,17 @@
     .section-title{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:400;color:var(--ink);letter-spacing:1px;}
 
     /* PROJECTS */
-    .projects-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);}
-    .project-card{background:var(--white);padding:52px 48px;position:relative;overflow:visible;transition:background 0.3s;}
+    .projects-grid{display:grid;grid-template-columns:1fr;gap:10px;background:transparent;border:none;}
+    .project-card{background:var(--white);padding:52px 48px;position:relative;overflow:visible;border:3px solid var(--streak,var(--rule));}
     .project-card:hover{background:var(--white);}
-    .project-card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--streak,var(--rule));transition:width 0.4s;}
-    .project-card:hover::before{width:7px;}
-    .project-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--streak,var(--rule));}
+    .project-card::before{content:none;}
+    .project-card::after{content:none;}
     .project-card.upcoming{background:var(--off-white);}
     .project-status{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--streak-text,var(--muted));margin-bottom:28px;display:flex;align-items:center;gap:8px;}
     .status-dot{width:6px;height:6px;border-radius:50%;background:var(--streak,var(--muted));flex-shrink:0;}
     .status-dot.pulse{animation:dotPulse 2s infinite;}
     @keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.7)}}
-    .project-index{position:absolute;bottom:40px;right:48px;font-family:'Cormorant Garamond',serif;font-size:7rem;font-weight:300;color:rgba(26,23,20,0.04);line-height:1;user-select:none;}
+    .project-index{display:none;}
     .project-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:400;line-height:1.15;color:var(--ink);margin-bottom:18px;max-width:480px;}
     .project-desc{font-size:0.92rem;color:var(--muted);line-height:1.8;max-width:500px;margin-bottom:0;}
     .project-tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:28px;}
@@ -263,7 +262,7 @@
   <p class="hero-eyebrow" data-editable="" contenteditable="false">Electrical Engineering · Portfolio</p>
   <h1 class="hero-name">Daniel<br><em data-editable="" contenteditable="false">Mejenny</em></h1>
   <div class="hero-divider"></div>
-  <p class="hero-sub" data-editable="" contenteditable="false">I build things that sit at the edge of hardware and software — smart locks, robot arms, quantum simulations. This is a collection of what I've been working on.</p>
+  <p class="hero-sub" data-editable="" contenteditable="false">My name is Daniel Mejenny and I am currently receiving my B.S in Electrical Engineering from Loyola University Maryland. I'm passionate about using my skills, ranging from MATLAB to breadboard prototyping, to work on various projects that produce real things. Here is a collection of those projects.</p>
   <div class="hero-nav-boxes">
     <a href="#projects" class="hero-nav-box" style="background:var(--ink);color:var(--white);">Projects</a>
     <a href="#skills" class="hero-nav-box" style="background:var(--brown-mid);color:var(--white);">Skills</a>
@@ -293,7 +292,7 @@
       <div class="project-card-inner">
         <div class="project-card-text">
           <h3 class="project-title" data-editable="" contenteditable="false">AR4 Robotic Arm Movement &amp; Control</h3>
-          <p class="project-desc" data-editable="" contenteditable="false">Currently working on programming the AR4 robotic arm. Mostly focused on getting the movement sequences right and tuning the stepper motors — there's a lot of back and forth between the low-level motor control and the higher-level path logic.</p>
+          <p class="project-desc" data-editable="" contenteditable="false">My current project involves utilizing Python to program a custom calibration system for an AR4 robotic arm. The most challenging part has been relaying between the low and high levels of motor control, so I've been focused on fine tuning the stepper motors to ensure accurate movement.</p>
           <div class="project-tags">
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Robotics</span>
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Motor Control</span>
@@ -448,7 +447,7 @@
       <div class="project-card-inner">
         <div class="project-card-text">
           <h3 class="project-title" data-editable="" contenteditable="false">AI-Powered Facial Recognition Door Handle</h3>
-          <p class="project-desc" data-editable="" contenteditable="false">A smart lock I built using a Raspberry Pi that recognizes faces in real time and uses a servo motor to unlock a door handle. I trained it on my own face encodings, and added a 2-second confirmation window so it doesn't trigger on a quick glance or a photo.</p>
+          <p class="project-desc" data-editable="" contenteditable="false">A smart lock I developed using Raspberry Pi, machine learning libraries, and my own face encodings. It locks and unlocks using servo motor functions that I integrated, and I also added a 2-second confirmation window for added security.</p>
           <div class="project-expand-btn" onclick="toggleExpand('detail-2', this)"><span class="expand-label">View Code &amp; Technical Details ↓</span></div>
           <div class="project-tags">
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Computer Vision</span>
@@ -614,7 +613,7 @@ turn_servo_to(0)   # return to locked</pre>
       <div class="project-card-inner">
         <div class="project-card-text">
           <h3 class="project-title" data-editable="" contenteditable="false">Deutsch-Jozsa Algorithm on Classical Machines</h3>
-          <p class="project-desc" data-editable="" contenteditable="false">A research paper I co-wrote examining whether the Deutsch-Jozsa algorithm actually proves quantum superiority, or whether a classical computer can replicate the same result. We found that it can, but only because the oracle used in the classical version is transparent — a different assumption than the quantum version makes.</p>
+          <p class="project-desc" data-editable="" contenteditable="false">A paper I co-wrote that examines whether the Deutsch-Jozsa algorithm proves quantum superiority or if a classical computer can replicate the same result. By using Qiskit software, we discovered that a classical computer can simulate the same results as a quantum computer, only because it uses a transparent oracle.</p>
           <div class="project-expand-btn" onclick="toggleExpand('detail-3', this)"><span class="expand-label">Read Research ↓</span></div>
           <div class="project-tags">
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Quantum Computing</span>
@@ -706,7 +705,7 @@ turn_servo_to(0)   # return to locked</pre>
       <div class="project-card-inner">
         <div class="project-card-text">
           <h3 class="project-title" data-editable="" contenteditable="false">Underwater Camera Stabilization Rig</h3>
-          <p class="project-desc" data-editable="" contenteditable="false">Working on a mount for an underwater fishing camera that stays stable in current. The main challenge is getting the shape and weight right so it holds its angle without needing any active stabilization.</p>
+          <p class="project-desc" data-editable="" contenteditable="false">This is a recreational project I'm working on. I'm trying to develop a mount for an underwater fishing camera that maintains its stability and angle in currents without needing active stabilization.</p>
           <div class="project-tags">
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">Mechanical Design</span>
             <span class="tag accent" data-removable="" data-editable="" contenteditable="false">SolidWorks</span>
