@@ -331,28 +331,28 @@
         <div class="detail-label">Problems I Had to Solve</div>
         <div class="detail-findings">
           <div class="finding-item"><div>
-            <strong>E-stop race condition in Teensy firmware</strong>
-            <p>Interrupt fired before the drive loop wrote back the real position, so every E-stop reported A0.000. The fix was to ignore the interrupt response entirely and query RP after reconnect.</p>
+            <strong>E-stop condition in Teensy firmware</strong>
+            <p>The E-stop built into the Teensy firmware wasn't designed for a different calibration process. The fix was to ignore the interrupt response entirely, letting the code continue even after the E-stop button was pressed without having to manually restart the code.</p>
           </div></div>
           <div class="finding-item"><div>
-            <strong>SP command was overwriting good data</strong>
-            <p>Recovery code sent SP with stale zeros right after reconnect, destroying the Teensy's correct step counters. Fix: never send SP before querying RP.</p>
+            <strong>Movement command was overwriting good position data</strong>
+            <p>The movement command was sending empty zero positions right after restarting the program, removing the Teensy's built in step counters. The fix was to have the movement command send a position as a new command rather than trying to overwrite the old position coordinates.</p>
           </div></div>
           <div class="finding-item"><div>
-            <strong>Asymmetric joint limits broke step math</strong>
-            <p>J2 defaults to 90°/42°. After FK resets both to 90°, anything that reloaded the original values made moves go the wrong direction. Fixed by resending FK before every move.</p>
+            <strong>Unequal joint limits broke the step counter math</strong>
+            <p>For example J2 would move to 42°, and after the program resets the value would internally return back to 90°, so anything that reloaded the original value subsequently made moves go the wrong direction. Fixed by resending position coordinates before every move so that the coordinates stay consistent.</p>
           </div></div>
           <div class="finding-item"><div>
-            <strong>False collision faults stopping calibration early</strong>
-            <p>FK changes axis limits mid-session, causing encoder drift that the Teensy flags as a collision. Fixed by running all joints in open loop during calibration.</p>
+            <strong>Imaginary collision faults stopping calibration early</strong>
+            <p>Position coordinates would change axis limits mid-session, causing the encoder to drift which the Teensy would flag as a collision. Fixed by running all joints in open loop during calibration, stopping the Teensy from detecting an imaginary collision.</p>
           </div></div>
           <div class="finding-item"><div>
-            <strong>Axis limit rejections on J4 and J6</strong>
-            <p>From +84°, commanding -170° is 254° of travel. The Teensy rejects it. Fixed by returning to home between the two direction tests so each starts from 0°.</p>
+            <strong>Physical axis limit causing rejections on J4 and J6</strong>
+            <p>If the position degree started from +84°, giving the Teensy a command to move to -170° would cause 254° of travel, resulting in the Teensy rejecting it. Fixed by returning to home between the two direction tests so each movement command starts from 0°.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>Stale error strings polluting position queries</strong>
-            <p>Leftover fault responses in the serial buffer caused RP to return garbage. Fixed by discarding any response that wasn't a valid position read and re-reading until one came through.</p>
+            <p>Leftover Teensy errors in the serial buffer would cause any further positions to be compromised. Fixed by filtering and discarding any response from the Teensy that wasn't a valid position, reading and re-reading until a valid position query came through.</p>
           </div></div>
         </div>
       </div>
@@ -471,21 +471,19 @@
 
       <div class="detail-section">
         <div class="detail-label">Why I Built It</div>
-        <p class="detail-text">Commercial smart locks are expensive, require Wi-Fi, and lock you into an app ecosystem. I wanted to build something that worked offline, cost under $150, and didn't need a phone to use. The four goals were facial recognition as the main unlock, a keypad as a backup, no Wi-Fi dependency, and a portable, door-mountable design.</p>
+        <p class="detail-text">Commercial smart locks are expensive, require Wi-Fi, and lock you into an app ecosystem. We wanted to build something that worked offline, cost under $150, and didn't need a phone connection to use. The four goals we had were using facial recognition as the main unlock, having a keypad as a backup, no Wi-Fi dependency, and a portable door mounted design.</p>
       </div>
 
       <div class="detail-section">
         <div class="detail-label">System Architecture</div>
         <div class="arch-flow">
-          <div class="arch-step"><div class="arch-step-label">Camera</div><div class="arch-step-sub">640×480 feed</div></div>
+          <div class="arch-step"><div class="arch-step-label">Camera</div><div class="arch-step-sub">640×480 resolution feed</div></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-step"><div class="arch-step-label">HOG Detector</div><div class="arch-step-sub">face_recognition</div></div>
+          <div class="arch-step"><div class="arch-step-label">Face Detector</div><div class="arch-step-sub">face_recognition</div></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-step"><div class="arch-step-label">128-pt Encode</div><div class="arch-step-sub">vs. pickle store</div></div>
+          <div class="arch-step"><div class="arch-step-label">2s Confirmation</div><div class="arch-step-sub">Fault proofing</div></div>
           <div class="arch-arrow">→</div>
-          <div class="arch-step"><div class="arch-step-label">2s Confirm</div><div class="arch-step-sub">anti-spoof timer</div></div>
-          <div class="arch-arrow">→</div>
-          <div class="arch-step"><div class="arch-step-label">Servo Unlock</div><div class="arch-step-sub">GPIO 18 / PWM</div></div>
+          <div class="arch-step"><div class="arch-step-label">Servo Unlock</div><div class="arch-step-sub">GPIO 18</div></div>
         </div>
       </div>
 
@@ -494,19 +492,19 @@
         <div class="detail-findings">
           <div class="finding-item"><div>
             <strong>Facial recognition</strong>
-            <p>Live frames come in at 640×480, faces get encoded into 128-point vectors and compared against stored encodings. Encodings are preloaded at startup so the live comparison is just a distance check. New users can be added at any time without touching the rest of the code. Achieved roughly 150 to 300ms detection latency on Pi hardware with stable recognition under controlled lighting.</p>
+            <p>Live frames come in at 640×480, faces get encoded and compared against stored encodings. Encodings are preloaded at startup so the live comparison is just a callback to the saved encodings. New users can be added at any time without touching any code. The live detection had roughly 150 to 300ms detection latency on the Raspberry Pi hardware with stable recognition under controlled lighting.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>2-second confirmation timer</strong>
-            <p>The lock only triggers if the same face holds a continuous match for 2 full seconds. This stops photo spoofing, accidental unlocks from people walking by, and brief false positives. If recognition drops mid-read the timer resets.</p>
+            <p>The lock would only open if the same face is detected for 2 full seconds. This stops photo fraud, accidental unlocks, and false positives. If the recognition stops mid detection the timer resets.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>Keypad backup</strong>
-            <p>Handles the real-world cases where facial recognition struggles, like low light or bad angles. The code is user-changeable and there's a lockout delay after repeated failed attempts.</p>
+            <p>This was added as the result of real world cases where facial recognition would struggle, like low light, bad angles, or facial obstructions. The code can be changed by the user after inputting the master code and there is a lockout feature after repeated failed attempts.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>Servo actuation</strong>
-            <p>Connected to GPIO 18 with pulse widths manually calibrated to 0.5ms to 2.5ms. The servo is powered externally rather than directly from the GPIO rail to avoid excessive current draw on the Pi. On unlock it rotates to 180°, holds for 2 seconds, then returns to locked automatically.</p>
+            <p>The servo is actuated by the Raspberry Pi GPIO 18. On unlock it rotates 90°, holds for 2 seconds, then returns to the locked position automatically.</p>
           </div></div>
         </div>
       </div>
@@ -516,19 +514,19 @@
         <div class="detail-findings">
           <div class="finding-item"><div>
             <strong>Lighting messing with recognition</strong>
-            <p>Poor lighting caused the detector to miss faces or return bad matches. I captured encodings under multiple lighting conditions during enrollment and leaned on the 2-second timer to filter out unstable detections.</p>
+            <p>Poor lighting caused the detection to miss faces or return bad facial matches. Fixed by capturing encodings under multiple lighting conditions during setup and using the 2-second timer to filter out unstable detections.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>Camera hanging on startup</strong>
-            <p>If the camera object wasn't properly released from a previous session the Pi would just sit there doing nothing. Added retry logic with up to 3 attempts and explicit cleanup between each one.</p>
+            <p>If the camera object wasn't properly released from a previous session the Pi would just sit there doing nothing. Fixed by adding retry logic with up to 3 attempts and a cleanup function between each session.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>Servo jitter</strong>
-            <p>Default gpiozero pulse range didn't match the servo spec, causing constant jitter and extra current draw. Manually setting the pulse widths to match the datasheet fixed both at once.</p>
+            <p>The default GPIO pulse range didn't match the servo spec, causing constant jitter and overcurrent issues. Manually setting the pulse widths to match the servo spec fixed the jitter.</p>
           </div></div>
           <div class="finding-item"><div>
-            <strong>Detection lag on the Pi</strong>
-            <p>Running at high resolution was too slow. Dropping to 640×480 and preloading the encodings reduced latency to real-time performance suitable for a door lock.</p>
+            <strong>Detection lag on the Raspberry Pi</strong>
+            <p>Running at high resolution was too slow for live detection. Dropping to 640×480 and preloading encodings reduced latency to real time performance suitable for a door lock.</p>
           </div></div>
         </div>
       </div>
@@ -638,7 +636,7 @@ while True:
 
       <div class="detail-section">
         <div class="detail-label">What We Did</div>
-        <p class="detail-text">I implemented a classical simulation of the Deutsch-Jozsa algorithm in Qiskit to evaluate whether its claimed quantum advantage holds under different oracle assumptions. The goal was to experimentally evaluate the claim rather than assume its validity. We ran experiments for up to 20 qubits, analyzed the circuit structure differences between quantum and classical models, and compared outputs across both constant and balanced oracle configurations.</p>
+        <p class="detail-text">We implemented a classical simulation of the Deutsch-Jozsa algorithm in Qiskit to evaluate whether quantum advantage is true under different oracle assumptions. The goal was to evaluate the claim rather than assume its validity. We ran experiments for up to 20 qubits, analyzed circuit structure differences between quantum and classical methods, and compared outputs across both constant and balanced oracles.</p>
       </div>
 
       <div class="detail-section">
@@ -646,14 +644,14 @@ while True:
         <div class="detail-findings">
           <div class="finding-item"><div><strong>Built the classical simulation in Qiskit using Python</strong></div></div>
           <div class="finding-item"><div><strong>Designed oracle configurations for both constant and balanced function types</strong></div></div>
-          <div class="finding-item"><div><strong>Ran and verified experiment outputs across up to 20 qubits</strong></div></div>
+          <div class="finding-item"><div><strong>Ran and verified experiment with outputs up to 20 qubits</strong></div></div>
           <div class="finding-item"><div><strong>Analyzed circuit structure differences between the quantum and classical models</strong></div></div>
         </div>
       </div>
 
       <div class="detail-section">
         <div class="detail-label">What the Algorithm Does</div>
-        <p class="detail-text">Deutsch-Jozsa determines whether a function is constant (always returns 0 or always 1) or balanced (returns 0 half the time and 1 the other half). A quantum computer solves this in a single query regardless of input size. Classically, worst case, you'd need to check half the inputs plus one before you could be certain. The algorithm is treated as a clean win for quantum computing. That's the claim we tested.</p>
+        <p class="detail-text">Deutsch-Jozsa determines whether a function is constant (always returns 0 or 1) or balanced (returns 0 half the time and 1 the other half). A quantum computer solves this in a single query regardless of the input size. Using classical methods you would need to check half the inputs plus one before you could be certain. The algorithm is considered a method to show quantum computing superiority. That's the claim we tested.</p>
       </div>
 
       <div class="detail-section">
@@ -661,22 +659,22 @@ while True:
         <div class="detail-findings">
           <div class="finding-item"><div>
             <strong>Classical simulation works for n less than 20</strong>
-            <p>Both constant and balanced oracle types returned the correct answer every time in a single query, matching the quantum version exactly. Simulation runtime increased exponentially with qubit count (O(2ⁿ)), limiting practical testing to n less than 20 on available hardware.</p>
+            <p>Both constant and balanced oracle types returned the correct answer every time in a single query, matching the quantum equivalent exactly. Simulation runtime did increase exponentially with increased qubit counts (O(2ⁿ)), which limited practical testing to n less than 20 on available hardware.</p>
           </div></div>
           <div class="finding-item"><div>
-            <strong>The oracle is not actually a black box</strong>
-            <p>To simulate it classically, you have to be able to see the CNOT gates inside the oracle. The quantum formulation treats the oracle as opaque, meaning you can't inspect it. That's a fundamentally different assumption, so the comparison isn't really apples to apples. The classical simulation only works because it gets information the quantum version doesn't assume you have.</p>
+            <strong>In our simulation the oracle is not actually a true black box</strong>
+            <p>To simulate it classically you have to be able to see the CNOT gates inside the oracle. In a quantum computer the oracle is treated as opaque, meaning you can't see inside of it. That's a fundamentally different assumption, so the comparison isn't really a fair comparison. The classical simulation only works because it gets information that the quantum version wouldn't have.</p>
           </div></div>
           <div class="finding-item"><div>
             <strong>The claimed quantum speedup depends entirely on the oracle model</strong>
-            <p>Johansson (2017) and Yavuz and Yadav (2023) both reached the same conclusion independently. The claimed quantum speedup is not universally applicable. It depends entirely on the oracle assumption. Change that assumption and the argument does not hold under modified oracle assumptions. D-J is a useful teaching tool for understanding quantum gates and superposition, but it's not solid proof of quantum advantage.</p>
+            <p>Johansson (2017) and Yavuz and Yadav (2023) both reached the same conclusion independently. They found that quantum speedup is not universally applicable. It depends entirely on the oracle assumption. If you were to change that assumption then the argument does not hold under the modified oracle assumptions.</p>
           </div></div>
         </div>
       </div>
 
       <div class="detail-section">
         <div class="detail-label">The Key Tradeoff</div>
-        <p class="detail-text">The interesting question isn't quantum vs. classical in general. It's about what information model you're working under. Transparent oracle means classical wins easily. Truly opaque oracle means quantum has a provable advantage. Most real problems fall somewhere in between, which is why this distinction matters when evaluating where quantum hardware is actually worth using.</p>
+        <p class="detail-text">The question isn't necessarily about quantum vs. classical in general. It's more about what computing model you're working with. Transparent oracle means classical computing outperforms quantum. Truly opaque oracle means quantum computing has a provable advantage. Most real problems would fall somewhere in between, which is why this distinction matters when evaluating where quantum hardware is actually worth using.</p>
       </div>
 
       <div class="detail-section">
@@ -754,6 +752,11 @@ plot_histogram(results[0].data.res.get_counts())</pre>
       </div>
 
       <div class="detail-section">
+        <div class="detail-label">Takeaway</div>
+        <p class="detail-text">This work reinforced the importance of clearly defining system assumptions when evaluating algorithmic performance. It's a principle that applies directly to engineering system design.</p>
+      </div>
+
+      <div class="detail-section">
         <div class="detail-label">References</div>
         <p class="detail-text" style="font-size:0.78rem;line-height:1.8;">
           [1] Johansson, N., Larsson, JÅ. "Efficient classical simulation of the Deutsch–Jozsa and Simon's algorithms." <em>Quantum Inf Process</em> 16, 233 (2017).<br>
@@ -769,11 +772,6 @@ plot_histogram(results[0].data.res.get_counts())</pre>
             Full Research Paper (PDF)
           </a>
         </div>
-      </div>
-
-      <div class="detail-section">
-        <div class="detail-label">Takeaway</div>
-        <p class="detail-text">This work reinforced the importance of clearly defining system assumptions when evaluating algorithmic performance. It's a principle that applies directly to engineering system design.</p>
       </div>
 
       <div class="detail-section">
